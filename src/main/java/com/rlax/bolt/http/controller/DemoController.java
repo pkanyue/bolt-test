@@ -8,14 +8,13 @@ import com.alipay.remoting.rpc.RpcClient;
 import com.rlax.bolt.message.RequestBody;
 import com.rlax.bolt.server.BoltServer;
 import com.rlax.corebin.core.result.R;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
@@ -27,15 +26,22 @@ import java.util.concurrent.Executor;
  */
 @Slf4j
 @RestController
-@AllArgsConstructor
 @RequestMapping("/demo")
 public class DemoController {
 
-	private final BoltServer boltServer;
-	private final RpcClient rpcClient;
-	private final Executor taskExecutor;
+	@Resource
+	private BoltServer boltServer;
+	@Resource
+	private RpcClient rpcClient;
+	@Resource(name = "serverExecutor")
+	private Executor taskExecutor;
 
-	@GetMapping("/sync")
+	/**
+	 * client 发送请求，连接到 server 端
+	 * @return
+	 * @throws Exception
+	 */
+	@GetMapping("/connect")
 	public R<String> clientSync() throws Exception {
 		log.info("clientSync 1 ...");
 		String addr = "127.0.0.1:" + 8899;
@@ -49,12 +55,11 @@ public class DemoController {
 
 	/**
 	 * 模拟中台调用站级客户端，客户端线程睡眠3秒
-	 * @param key
-	 * @return
-	 * @throws Exception
+	 * @param key 客户端 address，如：127.0.0.1:52049
+	 * @return 站级客户端响应结果
 	 */
 	@GetMapping("/async")
-	public Mono<R<String>> callClientByAsync(String key) throws Exception {
+	public Mono<R<String>> callClientByAsync(String key) {
 		log.info("callClientByAsync 1 ...");
 		RequestBody req = new RequestBody(RandomUtil.randomInt(100), "server call client ...");
 		// 随机哪个连接
@@ -66,7 +71,7 @@ public class DemoController {
 					@Override
 					public void onResponse(Object result) {
 						log.info("callClientByAsync 2 ...");
-						log.info("客户端调用返回：{}", result);
+						log.info("客户端调用返回：{}, 响应中台 HTTP Response", result);
 						rMonoSink.success(R.success(result.toString()));
 					}
 

@@ -9,7 +9,6 @@ import com.alipay.remoting.rpc.RpcClient;
 import com.rlax.bolt.message.RequestBody;
 import com.rlax.bolt.server.BoltServer;
 import com.rlax.corebin.core.result.R;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
@@ -29,13 +29,15 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @RestController
-@AllArgsConstructor
 @RequestMapping("test")
 public class TestController {
 
-	private final BoltServer boltServer;
-	private final RpcClient rpcClient;
-	private final Executor taskExecutor;
+	@Resource
+	private BoltServer boltServer;
+	@Resource
+	private RpcClient rpcClient;
+	@Resource(name = "serverExecutor")
+	private Executor taskExecutor;
 
 	@GetMapping("/mono")
 	public Mono<R<String>> demoAsync() {

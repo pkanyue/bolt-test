@@ -4,4 +4,4 @@ server:
 
 corebin:
   async:
-    enabled: true
+    enabled: false
