@@ -2,6 +2,6 @@
 server:
   port: 12000
 
-corebin:
-  async:
-    enabled: false
+spring:
+  application:
+    name: bolt-test

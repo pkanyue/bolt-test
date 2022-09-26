@@ -1,5 +1,6 @@
 package com.rlax.bolt.server.processor;
 
+import cn.hutool.core.util.StrUtil;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.rpc.protocol.SyncUserProcessor;
 import com.rlax.bolt.message.RequestBody;
@@ -15,7 +16,7 @@ public class MyServerUserProcessor extends SyncUserProcessor<RequestBody> {
     @Override
     public Object handleRequest(BizContext bizCtx, RequestBody request) throws Exception {
         log.info("服务端收到来自 {} 的请求：{}", bizCtx.getRemoteAddress(), request);
-        return "hello client, i am server";
+        return StrUtil.format("服务端收到来自 {} 的请求：{} 并响应：{}", bizCtx.getRemoteAddress(), request, "hello client, i am server");
     }
 
     @Override

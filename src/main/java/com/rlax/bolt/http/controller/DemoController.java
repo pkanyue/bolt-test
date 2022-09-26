@@ -7,8 +7,8 @@ import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.rpc.RpcClient;
 import com.rlax.bolt.message.RequestBody;
 import com.rlax.bolt.server.BoltServer;
-import com.rlax.corebin.core.result.R;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,15 +42,15 @@ public class DemoController {
 	 * @throws Exception
 	 */
 	@GetMapping("/connect")
-	public R<String> clientSync() throws Exception {
-		log.info("clientSync 1 ...");
+	public ResponseEntity<String> clientConnect() throws Exception {
+		log.info("clientConnect 1 ...");
 		String addr = "127.0.0.1:" + 8899;
 		RequestBody req = new RequestBody(1, "hello , i am client, i call sync");
-		log.info("clientSync 2 ...");
+		log.info("clientConnect 2 ...");
 		Object response = rpcClient.invokeSync(addr, req, 30000);
 		log.info("客户端调用返回：{}", response);
-		log.info("clientSync 3 ...");
-		return R.success(Objects.requireNonNull(response).toString());
+		log.info("clientConnect 3 ...");
+		return ResponseEntity.ok(Objects.requireNonNull(response).toString());
 	}
 
 	/**
@@ -59,20 +59,20 @@ public class DemoController {
 	 * @return 站级客户端响应结果
 	 */
 	@GetMapping("/async")
-	public Mono<R<String>> callClientByAsync(String key) {
+	public Mono<ResponseEntity<String>> callClientByAsync(String key) {
 		log.info("callClientByAsync 1 ...");
 		RequestBody req = new RequestBody(RandomUtil.randomInt(100), "server call client ...");
 		// 随机哪个连接
 		Connection connection = boltServer.getRpcServer().getConnectionManager().get(key);
 
-		Mono<R<String>> mono = Mono.create(rMonoSink -> {
+		Mono<ResponseEntity<String>> mono = Mono.create(rMonoSink -> {
 			try {
 				boltServer.getRpcServer().invokeWithCallback(connection, req, new InvokeCallback() {
 					@Override
 					public void onResponse(Object result) {
 						log.info("callClientByAsync 2 ...");
 						log.info("客户端调用返回：{}, 响应中台 HTTP Response", result);
-						rMonoSink.success(R.success(result.toString()));
+						rMonoSink.success(ResponseEntity.ok(result.toString()));
 					}
 
 					@Override
