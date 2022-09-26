@@ -1,5 +1,6 @@
 package com.rlax.bolt.client.processor;
 
+import cn.hutool.core.util.StrUtil;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
@@ -32,7 +33,8 @@ public class MyAsyncClientUserProcessor extends AsyncUserProcessor<RequestBody> 
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            asyncCtx.sendResponse("hello server, i am client");
+
+            asyncCtx.sendResponse(StrUtil.format("客户端收到来自 {}, 睡眠3秒后响应：{}", bizCtx.getRemoteAddress(), "hello server, i am client"));
         });
     }
 
