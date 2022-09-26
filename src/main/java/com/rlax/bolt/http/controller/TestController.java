@@ -19,11 +19,10 @@ import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 用户 控制器
+ * 测试 控制器
  *
  * @author Rlax
  * @since 2022-03-02 16:59:09
@@ -31,13 +30,14 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping
+@RequestMapping("test")
 public class TestController {
 
 	private final BoltServer boltServer;
 	private final RpcClient rpcClient;
+	private final Executor taskExecutor;
 
-	@GetMapping("/demo/mono")
+	@GetMapping("/mono")
 	public Mono<R<String>> demoAsync() {
 		log.info("demoAsync 1 ...");
 		Mono<R<String>> mono = Mono.create(monoSink -> {
@@ -53,7 +53,7 @@ public class TestController {
 		return mono;
 	}
 
-	@GetMapping("/demo/from")
+	@GetMapping("/from")
 	public Mono<R<String>> demoAsyncFrom() {
 		log.info("demoAsyncFrom 1 ...");
 		Mono<R<String>> mono = Mono.fromSupplier(() -> {
@@ -89,16 +89,19 @@ public class TestController {
 		return R.success(Objects.requireNonNull(response).toString());
 	}
 
-	@GetMapping("/client/send")
+	@GetMapping("/client/sync")
 	public R<String> clientSync() throws Exception {
+		log.info("clientSync 1 ...");
 		String addr = "127.0.0.1:" + 8899;
 		RequestBody req = new RequestBody(1, "hello , i am client, i call sync");
-		Object response = rpcClient.invokeSync(addr, req, 1000);
+		log.info("clientSync 2 ...");
+		Object response = rpcClient.invokeSync(addr, req, 30000);
 		log.info("客户端调用返回：{}", response);
+		log.info("clientSync 3 ...");
 		return R.success(Objects.requireNonNull(response).toString());
 	}
 
-	@GetMapping("/client/call")
+	@GetMapping("/client/async")
 	public Mono<R<String>> clientCall() throws Exception {
 		log.info("clientCall 1 ...");
 		String addr = "127.0.0.1:" + 8899;
@@ -107,8 +110,6 @@ public class TestController {
 		Mono<R<String>> mono = Mono.create(rMonoSink -> {
 			try {
 				rpcClient.invokeWithCallback(addr, req, new InvokeCallback() {
-					Executor executor = Executors.newCachedThreadPool();
-
 					@Override
 					public void onResponse(Object result) {
 						log.info("clientCall 2 ...");
@@ -123,10 +124,10 @@ public class TestController {
 
 					@Override
 					public Executor getExecutor() {
-						return executor;
+						return taskExecutor;
 					}
 
-				}, 1000);
+				}, 30000);
 			} catch (RemotingException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {

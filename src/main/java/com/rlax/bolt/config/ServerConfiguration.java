@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * Server\
+ *
  * @author Rlax
  * @date 2022/09/08
  */
@@ -24,12 +26,13 @@ public class ServerConfiguration {
 
     @Bean
     public BoltServer boltServer() {
+        // IDLE 事件间隔
         System.setProperty(Configs.TCP_IDLE, "10000");
         System.setProperty(Configs.TCP_IDLE_SWITCH, Boolean.toString(true));
         // 超过心跳次数将断开连接
-        System.setProperty(Configs.TCP_IDLE_MAXTIMES, "10");
+        System.setProperty(Configs.TCP_IDLE_MAXTIMES, "100");
         // 超过该时间没有接受消息将断开连接
-        System.setProperty(Configs.TCP_SERVER_IDLE, "5000");
+        System.setProperty(Configs.TCP_SERVER_IDLE, "90000");
 
         MyServerConnectEventProcessor serverConnectProcessor = new MyServerConnectEventProcessor();
         MyServerUserProcessor serverUserProcessor = new MyServerUserProcessor();

@@ -1,3 +1,7 @@
 #服务器配置
 server:
   port: 12000
+
+corebin:
+  async:
+    enabled: true

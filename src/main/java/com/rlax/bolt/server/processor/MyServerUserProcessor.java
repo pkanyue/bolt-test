@@ -1,6 +1,5 @@
 package com.rlax.bolt.server.processor;
 
-import cn.hutool.core.lang.Console;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.rpc.protocol.SyncUserProcessor;
 import com.rlax.bolt.message.RequestBody;
