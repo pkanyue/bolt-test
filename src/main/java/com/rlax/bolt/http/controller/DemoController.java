@@ -77,7 +77,7 @@ public class DemoController {
 
 					@Override
 					public void onException(Throwable e) {
-
+						rMonoSink.error(e);
 					}
 
 					@Override

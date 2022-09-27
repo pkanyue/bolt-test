@@ -1,3 +1,3 @@
 ## bolt-test
 
-springboot webflux 集成 bolt ，全栈异步测试
+springboot webflux 集成 bolt ，全链路异步测试

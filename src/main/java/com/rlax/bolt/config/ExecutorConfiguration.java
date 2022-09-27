@@ -27,7 +27,7 @@ public class ExecutorConfiguration {
     @Bean("clientExecutor")
     public Executor clientExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);
+        executor.setCorePoolSize(1);
         executor.setMaxPoolSize(50);
         executor.setQueueCapacity(10000);
         executor.setKeepAliveSeconds(300);
@@ -47,8 +47,8 @@ public class ExecutorConfiguration {
     @Bean("serverExecutor")
     public Executor serverExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);
-        executor.setMaxPoolSize(2);
+        executor.setCorePoolSize(5);
+        executor.setMaxPoolSize(50);
         executor.setQueueCapacity(10000);
         executor.setKeepAliveSeconds(300);
         executor.setThreadNamePrefix("server-executor-");

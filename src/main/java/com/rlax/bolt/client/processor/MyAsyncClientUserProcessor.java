@@ -25,9 +25,9 @@ public class MyAsyncClientUserProcessor extends AsyncUserProcessor<RequestBody> 
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, RequestBody request) {
-        log.info("客户端收到来自 {} 的请求：{}, {}", bizCtx.getRemoteAddress(), request);
+        log.info("客户端收到来自 {} 的请求：{}", bizCtx.getRemoteAddress(), request);
         taskExecutor.execute(() -> {
-            log.info("客户端 {} 处理请求：{}, {}", bizCtx.getRemoteAddress(), request);
+            log.info("客户端 {} 处理请求：{}", bizCtx.getRemoteAddress(), request);
             try {
                 TimeUnit.SECONDS.sleep(3);
             } catch (InterruptedException e) {
