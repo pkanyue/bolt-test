@@ -1,5 +1,7 @@
 package com.rlax.bolt.message;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Random;
 
@@ -9,6 +11,7 @@ import java.util.Random;
  * @author jiangping
  * @version $Id: RequestBody.java, v 0.1 2015-10-19 PM2:32:26 tao Exp $
  */
+@Data
 public class RequestBody implements Serializable {
 
     /** for serialization */
@@ -25,13 +28,16 @@ public class RequestBody implements Serializable {
 
     private Random             r                         = new Random();
 
+    private String traceId;
+
     public RequestBody() {
         //json serializer need default constructor
     }
 
-    public RequestBody(int id, String msg) {
+    public RequestBody(int id, String msg, String traceId) {
         this.id = id;
         this.msg = msg;
+        this.traceId = traceId;
     }
 
     public RequestBody(int id, int size) {
@@ -41,51 +47,8 @@ public class RequestBody implements Serializable {
         r.nextBytes(this.body);
     }
 
-    /**
-     * Getter method for property <tt>id</tt>.
-     * 
-     * @return property value of id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * Setter method for property <tt>id</tt>.
-     * 
-     * @param id value to be assigned to property id
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * Getter method for property <tt>msg</tt>.
-     * 
-     * @return property value of msg
-     */
-    public String getMsg() {
-        return msg;
-    }
-
-    /**
-     * Setter method for property <tt>msg</tt>.
-     * 
-     * @param msg value to be assigned to property msg
-     */
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    /** 
-     * @see Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "Body[this.id = " + id + ", this.msg = " + msg + "]";
-    }
-
     static public enum InvokeType {
         ONEWAY, SYNC, FUTURE, CALLBACK;
     }
+
 }

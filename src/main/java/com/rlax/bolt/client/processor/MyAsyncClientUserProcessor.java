@@ -34,7 +34,7 @@ public class MyAsyncClientUserProcessor extends AsyncUserProcessor<RequestBody> 
                 e.printStackTrace();
             }
 
-            asyncCtx.sendResponse(StrUtil.format("客户端收到来自 {}, 睡眠3秒后响应：{}", bizCtx.getRemoteAddress(), "hello server, i am client"));
+            asyncCtx.sendResponse(StrUtil.format("客户端收到来自 {} 的请求: {}, 睡眠3秒后响应：{}", bizCtx.getRemoteAddress(), request, "hello server, i am client"));
         });
     }
 

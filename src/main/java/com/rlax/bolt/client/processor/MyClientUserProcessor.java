@@ -22,7 +22,7 @@ public class MyClientUserProcessor extends SyncUserProcessor<RequestBody> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return "hello server, i am client";
+        return "hello server, i am client, traceId: " + request.getTraceId();
     }
 
     @Override

@@ -6,6 +6,8 @@ import com.alipay.remoting.rpc.protocol.SyncUserProcessor;
 import com.rlax.bolt.message.RequestBody;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.Executor;
+
 /**
  * @author Rlax
  * @date 2022/08/30
@@ -24,4 +26,8 @@ public class MyServerUserProcessor extends SyncUserProcessor<RequestBody> {
         return RequestBody.class.getName();
     }
 
+    @Override
+    public Executor getExecutor() {
+        return super.getExecutor();
+    }
 }

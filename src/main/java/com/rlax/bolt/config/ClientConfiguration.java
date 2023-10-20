@@ -6,6 +6,7 @@ import com.alipay.remoting.rpc.RpcClient;
 import com.rlax.bolt.client.processor.MyAsyncClientUserProcessor;
 import com.rlax.bolt.client.processor.MyClientConnectEventProcessor;
 import com.rlax.bolt.client.processor.MyClientDisConnectEventProcessor;
+import com.rlax.bolt.client.processor.MyClientExceptionEventProcessor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -45,6 +46,7 @@ public class ClientConfiguration {
         // 2. add processor for connect and close event if you need
         client.addConnectionEventProcessor(ConnectionEventType.CONNECT, clientConnectProcessor);
         client.addConnectionEventProcessor(ConnectionEventType.CLOSE, clientDisConnectProcessor);
+        client.addConnectionEventProcessor(ConnectionEventType.EXCEPTION, new MyClientExceptionEventProcessor());
         client.registerUserProcessor(clientUserProcessor);
         // 3. do init
         client.startup();

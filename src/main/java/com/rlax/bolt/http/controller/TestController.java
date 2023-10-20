@@ -73,7 +73,7 @@ public class TestController {
 
 	@GetMapping("/send/{msg}")
 	public ResponseEntity<String> send(@PathVariable String msg, String key) {
-		RequestBody req = new RequestBody(RandomUtil.randomInt(100), msg);
+		RequestBody req = new RequestBody(RandomUtil.randomInt(100), msg, "1234");
 		// 随机哪个连接
 		Connection connection = boltServer.getRpcServer().getConnectionManager().get(key);
 		Object response = null;
@@ -90,7 +90,7 @@ public class TestController {
 	public ResponseEntity<String> clientSync() throws Exception {
 		log.info("clientSync 1 ...");
 		String addr = "127.0.0.1:" + 8899;
-		RequestBody req = new RequestBody(1, "hello , i am client, i call sync");
+		RequestBody req = new RequestBody(1, "hello , i am client, i call sync", "1234");
 		log.info("clientSync 2 ...");
 		Object response = rpcClient.invokeSync(addr, req, 30000);
 		log.info("客户端调用返回：{}", response);
@@ -102,7 +102,7 @@ public class TestController {
 	public Mono<ResponseEntity<String>> clientCall() throws Exception {
 		log.info("clientCall 1 ...");
 		String addr = "127.0.0.1:" + 8899;
-		RequestBody req = new RequestBody(2, "hello , i am client, i call async");
+		RequestBody req = new RequestBody(2, "hello , i am client, i call async", "1234");
 
 		Mono<ResponseEntity<String>> mono = Mono.create(rMonoSink -> {
 			try {
